@@ -20,3 +20,5 @@ This script does several things, and provides progress bars for each step:
 6. Calls each function in a try/except that will notify if a specific function fails
 
 7. Provides continuation loop in case you want to run it again for some reason
+
+**_nslookup was called instead of using socket.getfqdn(), because of a known issue on windows_**
