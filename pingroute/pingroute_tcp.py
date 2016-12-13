@@ -92,7 +92,7 @@ def pingroute_list(targets, tryports):
         packet = ipheader + tcpheader
         for thing in range(len(hops)):
             ssocket = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
-            ssocket.setsockopt(socket.IPPROTO_TCP, socket.IP_TTL, ttl)
+            ssocket.setsockopt(socket.IPPROTO_TCP, socket.IP_HDRINCL, 1, socket.IP_TTL, ttl)
             try:
                 ssocket.sendto(packet, (i, port))
             except socket.error:
@@ -138,7 +138,7 @@ def pingroute(targets, tryports):
     packet = ipheader + tcpheader
     for thing in range(len(hops)):
         ssocket = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
-        ssocket.setsockopt(socket.IPPROTO_TCP, socket.IP_TTL, ttl)
+        ssocket.setsockopt(socket.IPPROTO_TCP, socket.IP_HDRINCL, 1, socket.IP_TTL, ttl)
         try:
             ssocket.sendto(packet, (targets, port))
         except socket.error:
