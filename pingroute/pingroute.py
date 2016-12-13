@@ -56,11 +56,11 @@ def pingroute(targets):
                    rec_socket.close()
                 if currentip is not None:
                     currenthost = "%s (%s)" % (currentname, currentip)
-                    hoplist.append(currentip)
                 else:
                     currenthost = "*"
                 if currentip not in hoplist:
                     print ("%d\t%s" % (ttl, currenthost))
+                    hoplist.append(currentip)
                     ttl += 1
                 else:
                     print ("Routing loop detected on path to %s. Moving on to next trace." % i)
@@ -96,11 +96,11 @@ def pingroute(targets):
                rec_socket.close()
             if currentip is not None:
                 currenthost = "%s (%s)" % (currentname, currentip)
-                hoplist.append(currentip)
             else:
                 currenthost = "*"
             if currentip not in hoplist:
                 print ("%d\t%s" % (ttl, currenthost))
+                hoplist.append(currentip)
                 ttl += 1
             else:
                 print ("Routing loop detected on path to %s. Stopping." % targets)
