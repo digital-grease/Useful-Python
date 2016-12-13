@@ -112,7 +112,13 @@ def pingroute(targets):
 def main():
     try:
         target = input("Enter IP/Hostname for single target, or CIDR format for range: ")
+    except:
+        print ('target input failed')
+    try:
         pingroutetarget = targetrange(target)
+    except:
+        print ('target resolution failed')
+    try:
         pingroute(pingroutetarget)
         print ("All done!!!")
     except:
