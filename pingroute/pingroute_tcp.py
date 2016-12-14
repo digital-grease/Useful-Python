@@ -86,17 +86,70 @@ def pingroute_list(targets, tryports):
     for i in targets:
         ttl = 1
         inc = 0
+        cont = 0
         port = int(tryports) + inc
         hops = 30
         ipheader = iphdr(host, str(i))
         tcpheader = synheader(host, str(i), port)
         packet = ipheader + tcpheader
+        while cont == 0:
+            for thing in range(hops):
+                ssocket = socket.socket(socket.AF_INET, socket.SOCK_RAW)
+                ssocket.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
+                ssocket.setsockopt(socket.IPPROTO_IP, socket.IP_TTL, ttl)
+                try:
+                    ssocket.sendto(packet, (str(i), port))
+                except socket.error:
+                    pass
+                while True:
+                    rsocket = socket.socket(socket.AF_INET, socket.SOCK_RAW)
+                    rsocket.bind(("", port))
+                    currentip = None
+                    currentname = None
+                    try:
+                        __, currentip = rsocket.recvfrom(512)
+                        currentip = currentip[0]
+                        try:
+                            currentname = socket.gethostbyaddr(currentip)[0]
+                        except socket.error:
+                            currentname = currentip
+                    except socket.error:
+                        pass
+                    finally:
+                       ssocket.close()
+                    if currentip is not None:
+                        currenthost = "%s (%s)" % (currentname, currentip)
+                    else:
+                        currenthost = "*"
+                    if currentip not in hoplist and currentip != i:
+                        print ("%d\t%d\t%s" % (inc, ttl, currenthost))
+                        hoplist.append(currentip)
+                        ttl += 1
+                        inc += 1
+                    elif currentip == targets or ttl > hops:
+                        cont += 1
+                        break
+                    else:
+                        print ("Routing loop detected on path to %s. Moving on to next trace." % i)
+                        cont += 1
+                        break
+def pingroute(targets, tryports):
+    hoplist = []
+    ttl = 1
+    inc = 0
+    cont = 0
+    port = int(tryports) + inc
+    hops = 30
+    ipheader = iphdr(host, targets)
+    tcpheader = synheader(host, targets, port)
+    packet = ipheader + tcpheader
+    while cont == 0:
         for thing in range(hops):
             ssocket = socket.socket(socket.AF_INET, socket.SOCK_RAW)
             ssocket.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
             ssocket.setsockopt(socket.IPPROTO_IP, socket.IP_TTL, ttl)
             try:
-                ssocket.sendto(packet, (str(i), port))
+                ssocket.sendto(packet, (targets, port))
             except socket.error:
                 pass
             while True:
@@ -119,63 +172,18 @@ def pingroute_list(targets, tryports):
                     currenthost = "%s (%s)" % (currentname, currentip)
                 else:
                     currenthost = "*"
-                if currentip not in hoplist and currentip != i:
+                if currentip not in hoplist and currentip != targets:
                     print ("%d\t%d\t%s" % (inc, ttl, currenthost))
                     hoplist.append(currentip)
                     ttl += 1
                     inc += 1
                 elif currentip == targets or ttl > hops:
+                    cont += 1
                     break
-                else:
-                    print ("Routing loop detected on path to %s. Moving on to next trace." % i)
+                elif currentip in hoplist:
+                    print ("Routing loop detected on path to %s." % targets)
+                    cont += 1
                     break
-def pingroute(targets, tryports):
-    hoplist = []
-    ttl = 1
-    inc = 0
-    port = int(tryports) + inc
-    hops = 30
-    ipheader = iphdr(host, targets)
-    tcpheader = synheader(host, targets, port)
-    packet = ipheader + tcpheader
-    for thing in range(hops):
-        ssocket = socket.socket(socket.AF_INET, socket.SOCK_RAW)
-        ssocket.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
-        ssocket.setsockopt(socket.IPPROTO_IP, socket.IP_TTL, ttl)
-        try:
-            ssocket.sendto(packet, (targets, port))
-        except socket.error:
-            pass
-        while True:
-            rsocket = socket.socket(socket.AF_INET, socket.SOCK_RAW)
-            rsocket.bind(("", port))
-            currentip = None
-            currentname = None
-            try:
-                __, currentip = rsocket.recvfrom(512)
-                currentip = currentip[0]
-                try:
-                    currentname = socket.gethostbyaddr(currentip)[0]
-                except socket.error:
-                    currentname = currentip
-            except socket.error:
-                pass
-            finally:
-               ssocket.close()
-            if currentip is not None:
-                currenthost = "%s (%s)" % (currentname, currentip)
-            else:
-                currenthost = "*"
-            if currentip not in hoplist and currentip != targets:
-                print ("%d\t%d\t%s" % (inc, ttl, currenthost))
-                hoplist.append(currentip)
-                ttl += 1
-                inc += 1
-            elif currentip == targets or ttl > hops:
-                break
-            elif currentip in hoplist:
-                print ("Routing loop detected on path to %s." % targets)
-                break
 #%%
 #call previous
 def main():
