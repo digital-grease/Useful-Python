@@ -3,16 +3,16 @@
 import dns.resolver, keyring, CloudFlare, time
 
 cloudflare_api = "https://www.cloudflare.com/api_json.html"
-auth_email = 'm.flowersbusiness@gmail.com'
-apikey = keyring.get_password('cloudflareapi', 'm.flowersbusiness@gmail.com')
-domain = 'photosynthesize.me'
+auth_email = '[EMAIL]'
+apikey = '[API_KEY]'
+domain = 'DOMAIN'
 wildcard = '*'
 a_record = 'A'
 wwwtype = 'www'
-zoneid = 'a6726d246329e56402b451209157e2f0'
-wildcard_id = '95d4514cd25c5616156cf1464d2d623f'
-a_record_id = '7eb88e4cb3397bc6bf74a3e26e307f4d'
-www_id = 'd076c35adac2dc952ef532c22735c950'
+zoneid = '[ZONE_ID'
+wildcard_id = '[WILDCARD_DNS_ID]'
+a_record_id = '[NO_SUBDOMAIN_DNS_ID]'
+www_id = '[WWW_DNS_ID]'
 #%%
 #use opendns servers to get public ip
 def getip():
