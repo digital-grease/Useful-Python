@@ -5,11 +5,11 @@ import dns.resolver, keyring, CloudFlare, time
 cloudflare_api = "https://www.cloudflare.com/api_json.html"
 auth_email = '[EMAIL]'
 apikey = '[API_KEY]'
-domain = 'DOMAIN'
+domain = '[DOMAIN]'
 wildcard = '*'
 a_record = 'A'
 wwwtype = 'www'
-zoneid = '[ZONE_ID'
+zoneid = '[ZONE_ID]'
 wildcard_id = '[WILDCARD_DNS_ID]'
 a_record_id = '[NO_SUBDOMAIN_DNS_ID]'
 www_id = '[WWW_DNS_ID]'
