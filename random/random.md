@@ -1,1 +1,1 @@
-#These are random snippets from my early learning stages of python; don't expect much from these.
+#These are random snippets, from my early stages of learning up till now.
