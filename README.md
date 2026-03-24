@@ -1,4 +1,7 @@
-# Useful-Python
+# These are super old, but honestly nostalgic, so i'm gonna leave this here untouched.
+
+
+## Useful-Python
 These are (hopefully) useful python scripts for day to day work.
 The longer ones will most likely be most useful broken down into each function.
 Despite that, for now they're going to remain as full scripts, because frankly i'm lazy. 
